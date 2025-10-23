@@ -4,8 +4,10 @@ import helmet from 'helmet';
 import compression from 'compression';
 import morgan from 'morgan';
 import rateLimit from 'express-rate-limit';
+import swaggerUi from 'swagger-ui-express';
 import { config } from '@/config';
 import connectDB from '@/config/database';
+import { swaggerSpec } from '@/config/swagger';
 import { errorHandler, notFound } from '@/middlewares/error.middleware';
 
 // Import controllers
@@ -61,6 +63,13 @@ app.get('/health', (req, res) => {
     timestamp: new Date().toISOString()
   });
 });
+
+// Swagger Documentation
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
+  explorer: true,
+  customCss: '.swagger-ui .topbar { display: none }',
+  customSiteTitle: 'Admissions Consulting API Documentation'
+}));
 
 // API Routes
 app.use('/api/auth', express.Router()

@@ -54,7 +54,78 @@ const paramsSchema = Joi.object({
   id: Joi.string().required()
 });
 
-// Get all students with pagination and filtering
+/**
+ * @swagger
+ * /api/students:
+ *   get:
+ *     summary: Lấy danh sách học viên
+ *     tags: [Students]
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *           default: 1
+ *         description: Số trang
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *           maximum: 100
+ *           default: 10
+ *         description: Số lượng item mỗi trang
+ *       - in: query
+ *         name: search
+ *         schema:
+ *           type: string
+ *         description: Tìm kiếm theo tên, email, số điện thoại
+ *       - in: query
+ *         name: status
+ *         schema:
+ *           type: string
+ *           enum: [Lead, Engaging, Registered, Dropped Out, Archived]
+ *         description: Lọc theo trạng thái
+ *       - in: query
+ *         name: source
+ *         schema:
+ *           type: string
+ *         description: Lọc theo nguồn tiếp cận
+ *       - in: query
+ *         name: counselor_id
+ *         schema:
+ *           type: string
+ *         description: Lọc theo tư vấn viên
+ *     responses:
+ *       200:
+ *         description: Danh sách học viên
+ *         content:
+ *           application/json:
+ *             schema:
+ *               allOf:
+ *                 - $ref: '#/components/schemas/Success'
+ *                 - type: object
+ *                   properties:
+ *                     data:
+ *                       type: object
+ *                       properties:
+ *                         students:
+ *                           type: array
+ *                           items:
+ *                             $ref: '#/components/schemas/Student'
+ *                         pagination:
+ *                           type: object
+ *                           properties:
+ *                             current_page:
+ *                               type: integer
+ *                             total_pages:
+ *                               type: integer
+ *                             total_items:
+ *                               type: integer
+ *                             items_per_page:
+ *                               type: integer
+ */
 export const getStudents = [
   validateQuery(querySchema),
   async (req: Request, res: Response) => {
@@ -108,7 +179,7 @@ export const getStudents = [
 
       const total = await Student.countDocuments(query);
 
-      res.json({
+      return res.json({
         success: true,
         data: {
           students,
@@ -122,7 +193,7 @@ export const getStudents = [
       });
     } catch (error) {
       console.error('Get students error:', error);
-      res.status(500).json({
+      return res.status(500).json({
         success: false,
         message: 'Internal server error'
       });
@@ -147,13 +218,13 @@ export const getStudentById = [
         });
       }
 
-      res.json({
+      return res.json({
         success: true,
         data: student
       });
     } catch (error) {
       console.error('Get student by ID error:', error);
-      res.status(500).json({
+      return res.status(500).json({
         success: false,
         message: 'Internal server error'
       });
@@ -188,14 +259,14 @@ export const createStudent = [
 
       await student.populate('assigned_counselor_id', 'full_name email user_type');
 
-      res.status(201).json({
+      return res.status(201).json({
         success: true,
         message: 'Student created successfully',
         data: student
       });
     } catch (error) {
       console.error('Create student error:', error);
-      res.status(500).json({
+      return res.status(500).json({
         success: false,
         message: 'Internal server error'
       });
@@ -237,14 +308,14 @@ export const updateStudent = [
         { new: true, runValidators: true }
       ).populate('assigned_counselor_id', 'full_name email user_type');
 
-      res.json({
+      return res.json({
         success: true,
         message: 'Student updated successfully',
         data: updatedStudent
       });
     } catch (error) {
       console.error('Update student error:', error);
-      res.status(500).json({
+      return res.status(500).json({
         success: false,
         message: 'Internal server error'
       });
@@ -269,13 +340,13 @@ export const deleteStudent = [
 
       await Student.findByIdAndDelete(id);
 
-      res.json({
+      return res.json({
         success: true,
         message: 'Student deleted successfully'
       });
     } catch (error) {
       console.error('Delete student error:', error);
-      res.status(500).json({
+      return res.status(500).json({
         success: false,
         message: 'Internal server error'
       });

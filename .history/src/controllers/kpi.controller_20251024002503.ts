@@ -417,17 +417,16 @@ export const updateCounselorKpiTarget = [
 // Delete counselor KPI target
 export const deleteCounselorKpiTarget = [
   validateParams(paramsSchema),
-  async (req: Request, res: Response): Promise<void> => {
+  async (req: Request, res: Response) => {
     try {
       const { id } = req.params;
 
       const target = await CounselorKpiTarget.findById(id);
       if (!target) {
-        res.status(404).json({
+        return res.status(404).json({
           success: false,
           message: 'Counselor KPI target not found'
         });
-        return;
       }
 
       await CounselorKpiTarget.findByIdAndDelete(id);

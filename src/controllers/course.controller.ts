@@ -93,7 +93,7 @@ export const getCourses = [
 
       const total = await Course.countDocuments(query);
 
-      res.json({
+      return res.json({
         success: true,
         data: {
           courses,
@@ -107,7 +107,7 @@ export const getCourses = [
       });
     } catch (error) {
       console.error('Get courses error:', error);
-      res.status(500).json({
+      return res.status(500).json({
         success: false,
         message: 'Internal server error'
       });
@@ -132,13 +132,13 @@ export const getCourseById = [
         });
       }
 
-      res.json({
+      return res.json({
         success: true,
         data: course
       });
     } catch (error) {
       console.error('Get course by ID error:', error);
-      res.status(500).json({
+      return res.status(500).json({
         success: false,
         message: 'Internal server error'
       });
@@ -167,14 +167,14 @@ export const createCourse = [
 
       await course.populate('category_id', 'name description');
 
-      res.status(201).json({
+      return res.status(201).json({
         success: true,
         message: 'Course created successfully',
         data: course
       });
     } catch (error) {
       console.error('Create course error:', error);
-      res.status(500).json({
+      return res.status(500).json({
         success: false,
         message: 'Internal server error'
       });
@@ -216,14 +216,14 @@ export const updateCourse = [
         { new: true, runValidators: true }
       ).populate('category_id', 'name description');
 
-      res.json({
+      return res.json({
         success: true,
         message: 'Course updated successfully',
         data: updatedCourse
       });
     } catch (error) {
       console.error('Update course error:', error);
-      res.status(500).json({
+      return res.status(500).json({
         success: false,
         message: 'Internal server error'
       });
@@ -248,13 +248,13 @@ export const deleteCourse = [
 
       await Course.findByIdAndDelete(id);
 
-      res.json({
+      return res.json({
         success: true,
         message: 'Course deleted successfully'
       });
     } catch (error) {
       console.error('Delete course error:', error);
-      res.status(500).json({
+      return res.status(500).json({
         success: false,
         message: 'Internal server error'
       });
@@ -267,13 +267,13 @@ export const getCourseCategories = async (req: Request, res: Response) => {
   try {
     const categories = await CourseCategory.find().sort({ name: 1 });
 
-    res.json({
+    return res.json({
       success: true,
       data: categories
     });
   } catch (error) {
     console.error('Get course categories error:', error);
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: 'Internal server error'
     });

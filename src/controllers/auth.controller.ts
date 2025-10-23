@@ -26,7 +26,70 @@ const refreshTokenSchema = Joi.object({
   refresh_token: Joi.string().required()
 });
 
-// Register new user
+/**
+ * @swagger
+ * /api/auth/register:
+ *   post:
+ *     summary: Đăng ký tài khoản mới
+ *     tags: [Authentication]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *               - password
+ *               - full_name
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 example: user@example.com
+ *               password:
+ *                 type: string
+ *                 minLength: 6
+ *                 example: password123
+ *               full_name:
+ *                 type: string
+ *                 example: Nguyễn Văn A
+ *               user_type:
+ *                 type: string
+ *                 enum: [admin, counselor, manager]
+ *                 default: counselor
+ *               is_main_consultant:
+ *                 type: boolean
+ *                 default: false
+ *               program_type:
+ *                 type: string
+ *                 example: Aptech
+ *     responses:
+ *       201:
+ *         description: Đăng ký thành công
+ *         content:
+ *           application/json:
+ *             schema:
+ *               allOf:
+ *                 - $ref: '#/components/schemas/Success'
+ *                 - type: object
+ *                   properties:
+ *                     data:
+ *                       type: object
+ *                       properties:
+ *                         user:
+ *                           $ref: '#/components/schemas/User'
+ *                         access_token:
+ *                           type: string
+ *                         refresh_token:
+ *                           type: string
+ *       400:
+ *         description: Lỗi validation hoặc email đã tồn tại
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ */
 export const register = [
   validateRequest(registerSchema),
   async (req: Request, res: Response) => {
@@ -63,16 +126,16 @@ export const register = [
       const accessToken = jwt.sign(
         { userId: user._id, email: user.email, user_type: user.user_type },
         config.jwtSecret,
-        { expiresIn: config.jwtExpire }
+        { expiresIn: config.jwtExpire } as any
       );
 
       const refreshToken = jwt.sign(
         { userId: user._id },
         config.jwtRefreshSecret,
-        { expiresIn: config.jwtRefreshExpire }
+        { expiresIn: config.jwtRefreshExpire } as any
       );
 
-      res.status(201).json({
+      return res.status(201).json({
         success: true,
         message: 'User registered successfully',
         data: {
@@ -90,7 +153,7 @@ export const register = [
       });
     } catch (error) {
       console.error('Register error:', error);
-      res.status(500).json({
+      return res.status(500).json({
         success: false,
         message: 'Internal server error'
       });
@@ -98,7 +161,55 @@ export const register = [
   }
 ];
 
-// Login user
+/**
+ * @swagger
+ * /api/auth/login:
+ *   post:
+ *     summary: Đăng nhập
+ *     tags: [Authentication]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *               - password
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 example: user@example.com
+ *               password:
+ *                 type: string
+ *                 example: password123
+ *     responses:
+ *       200:
+ *         description: Đăng nhập thành công
+ *         content:
+ *           application/json:
+ *             schema:
+ *               allOf:
+ *                 - $ref: '#/components/schemas/Success'
+ *                 - type: object
+ *                   properties:
+ *                     data:
+ *                       type: object
+ *                       properties:
+ *                         user:
+ *                           $ref: '#/components/schemas/User'
+ *                         access_token:
+ *                           type: string
+ *                         refresh_token:
+ *                           type: string
+ *       401:
+ *         description: Thông tin đăng nhập không đúng
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ */
 export const login = [
   validateRequest(loginSchema),
   async (req: Request, res: Response) => {
@@ -135,16 +246,16 @@ export const login = [
       const accessToken = jwt.sign(
         { userId: user._id, email: user.email, user_type: user.user_type },
         config.jwtSecret,
-        { expiresIn: config.jwtExpire }
+        { expiresIn: config.jwtExpire } as any
       );
 
       const refreshToken = jwt.sign(
         { userId: user._id },
         config.jwtRefreshSecret,
-        { expiresIn: config.jwtRefreshExpire }
+        { expiresIn: config.jwtRefreshExpire } as any
       );
 
-      res.json({
+      return res.json({
         success: true,
         message: 'Login successful',
         data: {
@@ -162,7 +273,7 @@ export const login = [
       });
     } catch (error) {
       console.error('Login error:', error);
-      res.status(500).json({
+      return res.status(500).json({
         success: false,
         message: 'Internal server error'
       });
@@ -192,10 +303,10 @@ export const refreshToken = [
       const accessToken = jwt.sign(
         { userId: user._id, email: user.email, user_type: user.user_type },
         config.jwtSecret,
-        { expiresIn: config.jwtExpire }
+        { expiresIn: config.jwtExpire } as any
       );
 
-      res.json({
+      return res.json({
         success: true,
         message: 'Token refreshed successfully',
         data: {
@@ -204,7 +315,7 @@ export const refreshToken = [
       });
     } catch (error) {
       console.error('Refresh token error:', error);
-      res.status(401).json({
+      return res.status(401).json({
         success: false,
         message: 'Invalid refresh token'
       });

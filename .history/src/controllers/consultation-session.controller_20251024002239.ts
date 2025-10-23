@@ -139,11 +139,10 @@ export const getConsultationSessionById = [
         .populate('student_id', 'student_name email phone_number current_status');
 
       if (!session) {
-        res.status(404).json({
+        return res.status(404).json({
           success: false,
           message: 'Consultation session not found'
         });
-        return;
       }
 
       res.json({
@@ -163,7 +162,7 @@ export const getConsultationSessionById = [
 // Create new consultation session
 export const createConsultationSession = [
   validateRequest(createConsultationSessionSchema),
-  async (req: Request, res: Response): Promise<void> => {
+  async (req: Request, res: Response) => {
     try {
       const sessionData = req.body;
 
@@ -192,18 +191,17 @@ export const createConsultationSession = [
 export const updateConsultationSession = [
   validateParams(paramsSchema),
   validateRequest(updateConsultationSessionSchema),
-  async (req: Request, res: Response): Promise<void> => {
+  async (req: Request, res: Response) => {
     try {
       const { id } = req.params;
       const updateData = req.body;
 
       const session = await ConsultationSession.findById(id);
       if (!session) {
-        res.status(404).json({
+        return res.status(404).json({
           success: false,
           message: 'Consultation session not found'
         });
-        return;
       }
 
       const updatedSession = await ConsultationSession.findByIdAndUpdate(
@@ -232,17 +230,16 @@ export const updateConsultationSession = [
 // Delete consultation session
 export const deleteConsultationSession = [
   validateParams(paramsSchema),
-  async (req: Request, res: Response): Promise<void> => {
+  async (req: Request, res: Response) => {
     try {
       const { id } = req.params;
 
       const session = await ConsultationSession.findById(id);
       if (!session) {
-        res.status(404).json({
+        return res.status(404).json({
           success: false,
           message: 'Consultation session not found'
         });
-        return;
       }
 
       await ConsultationSession.findByIdAndDelete(id);

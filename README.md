@@ -38,6 +38,11 @@ pnpm install
 cp env.example .env
 ```
 
+**Lưu ý:** Nếu gặp lỗi `Cannot find module '@/config'`, hãy chạy:
+```bash
+npm install tsconfig-paths
+```
+
 Chỉnh sửa file `.env` với các thông tin của bạn:
 ```env
 MONGODB_URI=mongodb://localhost:27017/admissions-consulting
@@ -64,6 +69,19 @@ pnpm dev
 npm run build
 npm start
 ```
+
+## 📖 API Documentation
+
+Sau khi chạy server, bạn có thể truy cập Swagger UI để test API:
+
+- **Swagger UI:** http://localhost:3000/api-docs
+- **Health Check:** http://localhost:3000/health
+
+Swagger UI cung cấp giao diện trực quan để:
+- Xem tất cả API endpoints
+- Test API trực tiếp từ browser
+- Xem request/response schemas
+- Thử nghiệm authentication
 
 ## 📚 API Endpoints
 

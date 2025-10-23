@@ -199,11 +199,10 @@ export const updateConsultationSession = [
 
       const session = await ConsultationSession.findById(id);
       if (!session) {
-        res.status(404).json({
+        return res.status(404).json({
           success: false,
           message: 'Consultation session not found'
         });
-        return;
       }
 
       const updatedSession = await ConsultationSession.findByIdAndUpdate(
@@ -238,11 +237,10 @@ export const deleteConsultationSession = [
 
       const session = await ConsultationSession.findById(id);
       if (!session) {
-        res.status(404).json({
+        return res.status(404).json({
           success: false,
           message: 'Consultation session not found'
         });
-        return;
       }
 
       await ConsultationSession.findByIdAndDelete(id);

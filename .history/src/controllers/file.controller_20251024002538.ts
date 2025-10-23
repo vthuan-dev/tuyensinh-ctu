@@ -85,7 +85,7 @@ export const uploadFile = [
 ];
 
 // Export students to Excel
-export const exportStudentsToExcel = async (req: Request, res: Response): Promise<void> => {
+export const exportStudentsToExcel = async (req: Request, res: Response) => {
   try {
     const { start_date, end_date, status, counselor_id } = req.query;
 
@@ -176,7 +176,7 @@ export const exportStudentsToExcel = async (req: Request, res: Response): Promis
 };
 
 // Export courses to Excel
-export const exportCoursesToExcel = async (req: Request, res: Response): Promise<void> => {
+export const exportCoursesToExcel = async (req: Request, res: Response) => {
   try {
     const { is_active, program_type, category_id } = req.query;
 
@@ -252,7 +252,7 @@ export const exportCoursesToExcel = async (req: Request, res: Response): Promise
 };
 
 // Export consultation sessions to Excel
-export const exportConsultationSessionsToExcel = async (req: Request, res: Response): Promise<void> => {
+export const exportConsultationSessionsToExcel = async (req: Request, res: Response) => {
   try {
     const { start_date, end_date, counselor_id, session_status } = req.query;
 

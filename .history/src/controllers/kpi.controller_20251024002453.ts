@@ -164,17 +164,16 @@ export const updateKpiDefinition = [
 // Delete KPI definition
 export const deleteKpiDefinition = [
   validateParams(paramsSchema),
-  async (req: Request, res: Response): Promise<void> => {
+  async (req: Request, res: Response) => {
     try {
       const { id } = req.params;
 
       const kpiDefinition = await KpiDefinition.findById(id);
       if (!kpiDefinition) {
-        res.status(404).json({
+        return res.status(404).json({
           success: false,
           message: 'KPI definition not found'
         });
-        return;
       }
 
       await KpiDefinition.findByIdAndDelete(id);
@@ -198,7 +197,7 @@ export const deleteKpiDefinition = [
 // Get all counselor KPI targets with pagination and filtering
 export const getCounselorKpiTargets = [
   validateQuery(querySchema),
-  async (req: Request, res: Response): Promise<void> => {
+  async (req: Request, res: Response) => {
     try {
       const {
         page = 1,
@@ -271,7 +270,7 @@ export const getCounselorKpiTargets = [
 // Get counselor KPI target by ID
 export const getCounselorKpiTargetById = [
   validateParams(paramsSchema),
-  async (req: Request, res: Response): Promise<void> => {
+  async (req: Request, res: Response) => {
     try {
       const { id } = req.params;
 
@@ -280,11 +279,10 @@ export const getCounselorKpiTargetById = [
         .populate('kpi_id', 'name unit');
 
       if (!target) {
-        res.status(404).json({
+        return res.status(404).json({
           success: false,
           message: 'Counselor KPI target not found'
         });
-        return;
       }
 
       res.json({
@@ -304,28 +302,26 @@ export const getCounselorKpiTargetById = [
 // Create new counselor KPI target
 export const createCounselorKpiTarget = [
   validateRequest(createCounselorKpiTargetSchema),
-  async (req: Request, res: Response): Promise<void> => {
+  async (req: Request, res: Response) => {
     try {
       const targetData = req.body;
 
       // Check if counselor exists
       const counselor = await import('@/models/User.model').then(m => m.default.findById(targetData.counselor_id));
       if (!counselor) {
-        res.status(400).json({
+        return res.status(400).json({
           success: false,
           message: 'Counselor not found'
         });
-        return;
       }
 
       // Check if KPI definition exists
       const kpiDefinition = await KpiDefinition.findById(targetData.kpi_id);
       if (!kpiDefinition) {
-        res.status(400).json({
+        return res.status(400).json({
           success: false,
           message: 'KPI definition not found'
         });
-        return;
       }
 
       const target = new CounselorKpiTarget(targetData);
@@ -353,29 +349,27 @@ export const createCounselorKpiTarget = [
 export const updateCounselorKpiTarget = [
   validateParams(paramsSchema),
   validateRequest(updateCounselorKpiTargetSchema),
-  async (req: Request, res: Response): Promise<void> => {
+  async (req: Request, res: Response) => {
     try {
       const { id } = req.params;
       const updateData = req.body;
 
       const target = await CounselorKpiTarget.findById(id);
       if (!target) {
-        res.status(404).json({
+        return res.status(404).json({
           success: false,
           message: 'Counselor KPI target not found'
         });
-        return;
       }
 
       // Check if counselor exists (if updating counselor_id)
       if (updateData.counselor_id) {
         const counselor = await import('@/models/User.model').then(m => m.default.findById(updateData.counselor_id));
         if (!counselor) {
-          res.status(400).json({
+          return res.status(400).json({
             success: false,
             message: 'Counselor not found'
           });
-          return;
         }
       }
 
@@ -383,11 +377,10 @@ export const updateCounselorKpiTarget = [
       if (updateData.kpi_id) {
         const kpiDefinition = await KpiDefinition.findById(updateData.kpi_id);
         if (!kpiDefinition) {
-          res.status(400).json({
+          return res.status(400).json({
             success: false,
             message: 'KPI definition not found'
           });
-          return;
         }
       }
 
@@ -417,17 +410,16 @@ export const updateCounselorKpiTarget = [
 // Delete counselor KPI target
 export const deleteCounselorKpiTarget = [
   validateParams(paramsSchema),
-  async (req: Request, res: Response): Promise<void> => {
+  async (req: Request, res: Response) => {
     try {
       const { id } = req.params;
 
       const target = await CounselorKpiTarget.findById(id);
       if (!target) {
-        res.status(404).json({
+        return res.status(404).json({
           success: false,
           message: 'Counselor KPI target not found'
         });
-        return;
       }
 
       await CounselorKpiTarget.findByIdAndDelete(id);
