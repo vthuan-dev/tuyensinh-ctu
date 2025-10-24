@@ -17,6 +17,11 @@ import * as courseController from '@/controllers/course.controller';
 import * as consultationSessionController from '@/controllers/consultation-session.controller';
 import * as kpiController from '@/controllers/kpi.controller';
 import * as fileController from '@/controllers/file.controller';
+import * as adminController from '@/controllers/admin.controller';
+import * as notificationController from '@/controllers/notification.controller';
+import * as scheduleController from '@/controllers/schedule.controller';
+import * as ocrController from '@/controllers/ocr.controller';
+import * as studentFeaturesController from '@/controllers/student-features.controller';
 
 const app = express();
 
@@ -134,6 +139,53 @@ app.use('/api/export', express.Router()
   .get('/students/excel', fileController.exportStudentsToExcel)
   .get('/courses/excel', fileController.exportCoursesToExcel)
   .get('/consultation-sessions/excel', fileController.exportConsultationSessionsToExcel)
+);
+
+// Admin Routes
+app.use('/api/admin', express.Router()
+  .get('/statistics', adminController.getStatistics)
+  .post('/reports/generate', adminController.generateReport)
+  .get('/reports', adminController.getReports)
+  .get('/reports/:id', adminController.downloadReport)
+);
+
+// Notification Routes
+app.use('/api/notifications', express.Router()
+  .post('/', notificationController.sendNotification)
+  .post('/bulk', notificationController.sendBulkNotification)
+  .get('/', notificationController.getNotifications)
+  .put('/:id/status', notificationController.updateNotificationStatus)
+);
+
+// Schedule & Appointment Routes
+app.use('/api/schedules', express.Router()
+  .post('/', scheduleController.createSchedule)
+  .get('/', scheduleController.getSchedules)
+);
+
+app.use('/api/appointments', express.Router()
+  .post('/', scheduleController.createAppointment)
+  .get('/', scheduleController.getAppointments)
+  .put('/:id', scheduleController.updateAppointment)
+);
+
+// OCR Routes
+app.use('/api/ocr', express.Router()
+  .post('/process', ocrController.processOCR)
+  .get('/documents', ocrController.getOCRDocuments)
+  .put('/documents/:id/verify', ocrController.verifyOCRData)
+  .post('/documents/:id/create-student', ocrController.createStudentFromOCR)
+);
+
+// Public Student Features Routes
+app.use('/api/public/courses', express.Router()
+  .get('/', studentFeaturesController.getPublicCourses)
+  .get('/:id', studentFeaturesController.getPublicCourseById)
+);
+
+app.use('/api/public/consultation', express.Router()
+  .post('/register', studentFeaturesController.registerOnlineConsultation)
+  .get('/check-status', studentFeaturesController.checkConsultationStatus)
 );
 
 // 404 handler

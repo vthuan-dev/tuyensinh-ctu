@@ -5,7 +5,7 @@ dotenv.config();
 
 const connectDB = async (): Promise<void> => {
   try {
-    const mongoURI = process.env.MONGODB_URI || 'mongodb://localhost:27017/admissions-consulting';
+    const mongoURI = process.env.MONGODB_URI || 'mongodb+srv://trongnghiann4911_db_user:Fe2BUeR7Ybg5L9au@tuyensinh.wtc4ltg.mongodb.net/?appName=tuyensinh';
     
     await mongoose.connect(mongoURI);
     

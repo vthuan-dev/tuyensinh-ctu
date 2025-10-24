@@ -26,4 +26,26 @@ export const config = {
   // File Upload
   maxFileSize: parseInt(process.env.MAX_FILE_SIZE || '5242880'), // 5MB
   uploadPath: process.env.UPLOAD_PATH || './uploads',
+  
+  // Email Configuration
+  emailHost: process.env.EMAIL_HOST || 'smtp.gmail.com',
+  emailPort: parseInt(process.env.EMAIL_PORT || '587'),
+  emailSecure: process.env.EMAIL_SECURE === 'true',
+  emailUser: process.env.EMAIL_USER || '',
+  emailPassword: process.env.EMAIL_PASSWORD || '',
+  emailFrom: process.env.EMAIL_FROM || 'noreply@example.com',
+  
+  // SMS Configuration (Twilio)
+  twilioAccountSid: process.env.TWILIO_ACCOUNT_SID || '',
+  twilioAuthToken: process.env.TWILIO_AUTH_TOKEN || '',
+  twilioPhoneNumber: process.env.TWILIO_PHONE_NUMBER || '',
+  
+  // Redis Configuration
+  redisHost: process.env.REDIS_HOST || 'localhost',
+  redisPort: parseInt(process.env.REDIS_PORT || '6379'),
+  redisPassword: process.env.REDIS_PASSWORD || '',
+  
+  // OCR Configuration
+  ocrLanguage: process.env.OCR_LANGUAGE || 'vie+eng',
+  ocrConfidenceThreshold: parseFloat(process.env.OCR_CONFIDENCE_THRESHOLD || '0.6'),
 };
